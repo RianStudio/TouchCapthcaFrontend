@@ -3,12 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>demo</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script type="text/javascript" src="assets/func.js"></script>
+    <style type="text/css">
+        .box_1{
+            height: 200px;
+            width: 300px;
+            background-color: antiquewhite;
+
+        }
+        .box_2{
+            height: 30px;
+            width: 300px;
+            background-color: aquamarine;
+        }
+        .but{
+            height: 10px;
+            width: 20px;
+            padding-top: 5px;
+            /*margin-top: 5px;*/
+            background-color: black;
+        }
+
+    </style>
 </head>
 <body>
 
 <h1>captchca</h1>
+
+<div class="captchca_box">
+
+    <div class="box_1">
+        <!--放置一个图片-->
+        <img src="assets/ww.jpg">
+
+    </div>
+    <div class="box_2">
+        <div id="drag" class="but" style="transform: translate(0px, 0px); -webkit-transform: translate(0px, 0px);"></div>
+    </div>
+
+</div>
 <script>
+    $(function() {
+        $( "#drag" ).draggable({ axis: "x" });
+    });
     loading()
 </script>
 </body>
