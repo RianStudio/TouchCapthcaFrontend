@@ -19,12 +19,14 @@
             width: 300px;
             background-color: aquamarine;
         }
+
         .but{
             height: 10px;
             width: 20px;
             padding-top: 5px;
             /*margin-top: 5px;*/
             background-color: black;
+            margin-left: 10px;
         }
 
         .but-drag{
@@ -37,64 +39,98 @@
 
         }
 
+        .pic-k{
+            width: 250px;
+            height: 180px;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            overflow: hidden;
+        }
 
-        .div-a{ position:absolute; left:30px; top:30px; background:#F00; width:200px; height:150px; z-index: 10}
+
+        .div-a{ position:absolute;  background:#F00;  z-index: 10}
         /* css注释说明： 背景为红色 */
-        .div-b{ position:absolute; left:30px; top:30px; background:#FF0; width:200px; height:150px; z-index: 20}
+        .div-b{ position:absolute;  background:#FF0;  z-index: 20}
         /* 背景为黄色 */
-        .div-c{ position:absolute; left:30px; top:30px; background:#00F; width:200px; height:150px; z-index: 30}
+        .div-c{ position:absolute;  background:#00F; z-index: 30}
         /* DIV背景颜色为蓝色 */
 
     </style>
 </head>
 <body>
 
-<h1>captchca</h1>
+<h1>captchca demo</h1>
 
-<div class="captchca_box">
+<form action="#" method="post">
 
-    <div class="box_1">
-        <!--放置一个图片-->
-        <div id="div-a" class="div-a">图片载入中</div>
-        <div id="div-b" class="div-b">展示完整的图片</div>
-        <div id="div-c" class="div-c">裁剪过的图片需要拼接到对应的位置上</div>
 
-    </div>
-    <div class="box_2">
-        <div id="drag" class="but" style="transform: translate(0px, 0px); -webkit-transform: translate(0px, 0px);"></div>
-    </div>
+    <label for="email"  >email</label><input type="email" name="email" id="email"><br/>
 
-</div>
+    <label for="password"  >password</label><input type="password" name="password" id="password"><br/>
+
+    <div class="captchca_box">
+
+        <div class="box_1">
+            <!--放置一个图片-->
+            <div id="div-a" class="div-a pic-k">图片载入中</div>
+            <div id="div-b" class="div-b pic-k">展示完整的图片</div>
+            <div id="div-c" class="div-c pic-k">
+                <div id="drag" class="but" ></div>
+
+                </div>
+
+        </div>
+        <div class="box_2">
+            拖拽拼图到指定位置以验证 <button onclick="init()">重新载入图片</button>
+
+        </div>
+
+    </div><br/>
+
+    <button type="submit" value="submit" >Commit</button>
+
+</form>
+
+
+
 <script>
-    $(function() {
-        $( "#drag" ).draggable(
-                {containment: "parent", axis: "x" ,create: function( event, ui ) {
 
-                    showB()
-                },drag: function( event, ui ) {
-                    // Keep the left edge of the element
-                    // at least 100 pixels from the container
-                    ui.position.left = Math.min( 250, ui.position.left );
+    function  init(){
+        $(function () {
+            $("#drag").draggable(
+                    {
+                        containment: "parent",
 
-                    $( "#drag" ).addClass('but-drag');
-                    showC()
+                        create: function (event, ui) {
 
-                },stop: function( event, ui ) {
-                   
-                    $( "#drag" ).removeClass('but-drag')
+                            showC()
+                        }, drag: function (event, ui) {
+                        // Keep the left edge of the element
+                        // at least 100 pixels from the container
+                        ui.position.left = Math.min(250, ui.position.left);
 
-                    showC()
-                    if(ui.position.left > 150){
-                        showB()
+                        $("#drag").addClass('but-drag');
+                        showC();
+
+                    }, stop: function (event, ui) {
+
+                        $("#drag").removeClass('but-drag')
+
+                        showC()
+                        if (ui.position.left > 150) {
+                            showB()
+                        }
                     }
-                }
 
-                }
-
-        );
+                    }
+            );
 
 
-    });
+        });
+    }
+
+    init()
 
     function showA(){
 //        $( "#div-a" ).addClass('hidden');
