@@ -8,6 +8,7 @@
     <script type="text/javascript" src="assets/func.js"></script>
     <style type="text/css">
         .box_1{
+            position:relative;
             height: 200px;
             width: 300px;
             background-color: antiquewhite;
@@ -26,6 +27,24 @@
             background-color: black;
         }
 
+        .but-drag{
+            background-color: beige;
+        }
+
+
+        .hidden{
+            display: none;
+
+        }
+
+
+        .div-a{ position:absolute; left:30px; top:30px; background:#F00; width:200px; height:150px; z-index: 10}
+        /* css注释说明： 背景为红色 */
+        .div-b{ position:absolute; left:30px; top:30px; background:#FF0; width:200px; height:150px; z-index: 20}
+        /* 背景为黄色 */
+        .div-c{ position:absolute; left:30px; top:30px; background:#00F; width:200px; height:150px; z-index: 30}
+        /* DIV背景颜色为蓝色 */
+
     </style>
 </head>
 <body>
@@ -36,7 +55,9 @@
 
     <div class="box_1">
         <!--放置一个图片-->
-        <img src="assets/ww.jpg">
+        <div id="div-a" class="div-a">图片载入中</div>
+        <div id="div-b" class="div-b">展示完整的图片</div>
+        <div id="div-c" class="div-c">裁剪过的图片需要拼接到对应的位置上</div>
 
     </div>
     <div class="box_2">
@@ -46,8 +67,59 @@
 </div>
 <script>
     $(function() {
-        $( "#drag" ).draggable({ axis: "x" });
+        $( "#drag" ).draggable(
+                {containment: "parent", axis: "x" ,create: function( event, ui ) {
+
+                    showB()
+                },drag: function( event, ui ) {
+                    // Keep the left edge of the element
+                    // at least 100 pixels from the container
+                    ui.position.left = Math.min( 250, ui.position.left );
+
+                    $( "#drag" ).addClass('but-drag');
+                    showC()
+
+                },stop: function( event, ui ) {
+                   
+                    $( "#drag" ).removeClass('but-drag')
+
+                    showC()
+                    if(ui.position.left > 150){
+                        showB()
+                    }
+                }
+
+                }
+
+        );
+
+
     });
+
+    function showA(){
+//        $( "#div-a" ).addClass('hidden');
+        $( "#div-b" ).addClass('hidden');
+        $( "#div-c" ).addClass('hidden');
+        $( "#div-a" ).removeClass('hidden');
+//        $( "#div-b" ).removeClass('hidden');
+//        $( "#div-c" ).removeClass('hidden');
+    }
+    function showB(){
+        $( "#div-a" ).addClass('hidden');
+//        $( "#div-b" ).addClass('hidden');
+        $( "#div-c" ).addClass('hidden');
+//        $( "#div-a" ).removeClass('hidden');
+        $( "#div-b" ).removeClass('hidden');
+//        $( "#div-c" ).removeClass('hidden');
+    }
+    function showC(){
+        $( "#div-a" ).addClass('hidden');
+        $( "#div-b" ).addClass('hidden');
+//        $( "#div-c" ).addClass('hidden');
+//        $( "#div-a" ).removeClass('hidden');
+//        $( "#div-b" ).removeClass('hidden');
+        $( "#div-c" ).removeClass('hidden');
+    }
     loading()
 </script>
 </body>
