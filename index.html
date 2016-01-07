@@ -118,11 +118,37 @@
 
             //获取当前的key v
 
-            var url="http://tback.localhost:8080/pic?k=xxxv&v=xxx&s=1";
+
+
+
+            var massage;
+            var ajax_url="http://tback.localhost:8080/picture?k=xxxv&v=xxx";
+            //请求对应的结果
+//            $.get(ajax_url, function(result){
+//
+//                console.log(result);
+//
+//                massage=result;
+//                alert(massage.a);
+//            });
+
+            $.ajax({
+                type: "GET",
+                url: ajax_url,
+                async:false,
+                data: {k:"xxx", v:"jjj"},
+                dataType: "json",
+                success: function(data){
+                    massage=data;
+                }
+            });
+
 
 
             //初始化图片
-            var pic="http://tback.localhost:8080/picture?k=xxxv&v=xxx&s=1";
+            var pic=massage.a;
+            var bg_pic=massage.r;
+            var icon=massage.w;
             //初始化裁剪位置
             var width_l=240; //最大宽度
             var height_l=180; //最大高度
@@ -137,9 +163,9 @@
 
 //            console.log(rect_str);
             //进行按钮的裁剪
-            $("#drag_img").attr("src",'http://tback.localhost:8080/picture?k=xxxv&v=xxx&s=2');
+            $("#drag_img").attr("src",icon);
             $("#div-c").css('background',"url('"+pic+"')");
-            $("#div-b").css('background',"url('"+pic+"')");
+            $("#div-b").css('background',"url('"+bg_pic+"')");
 
 
             //初始化碎片所在位置
@@ -151,14 +177,7 @@
 
             //ajax获取对应的坐标
 
-            var ajax_url="http://tback.localhost:8080/xy?k=xxxv&v=xxx&s=2";
-            jQuery.support.cors = true;
-            var target;
 
-            $.get(ajax_url, function(result){
-
-                target=result;
-            });
 
             $("#but-u").draggable(
                     {
@@ -183,7 +202,7 @@
 
 
                         //停止之后,进行检测
-                        if( Math.abs( ui.position.left - target.x )  < 10 && Math.abs( ui.position.top - target.y )  < 10  ){
+                        if( Math.abs( ui.position.left - massage.x )  < 10 && Math.abs( ui.position.top - massage.y )  < 10  ){
                             alert("验证完成咯~");
                             showB();
                         }
