@@ -28,6 +28,8 @@
             /*background-color: black;*/
             /*background-color: aquamarine;*/
             position: absolute;
+            cursor:pointer;
+            border:1px solid #000
         }
 
         .but-drag{
@@ -53,12 +55,16 @@
 
 
 
-        .div-a{ position:absolute;  background:#F00;  z-index: 10}
+
+
+        .div-a{ position:absolute;  z-index: 10}
         /* css注释说明： 背景为红色 */
-        .div-b{ position:absolute;  background:#FF0;  z-index: 20}
+        .div-b{ position:absolute;   z-index: 20}
         /* 背景为黄色 */
-        .div-c{ position:absolute;   z-index: 30}
+        .div-c{ position:relative;   z-index: 30}
         /* DIV背景颜色为蓝色 */
+
+
 
     </style>
 </head>
@@ -110,34 +116,49 @@
             //图片展示区域为240 180
             //240/6= 40  180/6=30
 
+            //获取当前的key v
+
+            var url="http://tback.localhost:8080/pic?k=xxxv&v=xxx&s=1";
+
 
             //初始化图片
-            var pic="http://img5.duitang.com/uploads/item/201406/12/20140612192936_FtNy4.thumb.700_0.jpeg";
+            var pic="http://tback.localhost:8080/picture?k=xxxv&v=xxx&s=1";
             //初始化裁剪位置
-            var width_l=200;
-            var height_l=150;
-            var but_width_p=Math.ceil( Math.random() * width_l) ;
-            var but_height_p=Math.ceil( Math.random() * height_l);
-            var clip_right=width_l-but_width_p;
-            var clip_down=height_l-but_height_p;
+            var width_l=240; //最大宽度
+            var height_l=180; //最大高度
+            var but_width_p=Math.ceil( Math.random() * width_l) ; //随机出现在的位置,按钮的横坐标左上
+            var but_height_p=Math.ceil( Math.random() * height_l); //随机出现在的位置,按钮的纵坐标,左上
+            var clip_right=width_l-but_width_p; //裁切的右边距
+            var clip_down=height_l-but_height_p; //裁切的下边距
 
-            var rect_str="rect("+but_width_p+"px, "+clip_right+"px, "+clip_down+"px, "+ but_height_p+ "px)";
+            console.log("上 "+but_height_p+" 右 "+clip_right+" 下 "+ clip_down +" 左"+ but_width_p);
+            //确认的剪裁区域大小,上右下左
+            var rect_str="rect("+but_height_p+"px, "+clip_right+"px, "+clip_down+"px, "+ but_width_p+ "px)";
 
 //            console.log(rect_str);
             //进行按钮的裁剪
-            $("#drag_img").attr("src",pic);
+            $("#drag_img").attr("src",'http://tback.localhost:8080/picture?k=xxxv&v=xxx&s=2');
             $("#div-c").css('background',"url('"+pic+"')");
-            $("#drag_img").css("position",'absolute');
-            $("#drag_img").css("clip",rect_str);
+            $("#div-b").css('background',"url('"+pic+"')");
 
-//            $(".")
 
             //初始化碎片所在位置
 
-            $('#but-u').css('top',but_height_p);
-            $('#but-u').css('left',but_width_p);
+            $('#but-u').css('top',0);
+            $('#but-u').css('left',0);
 
-            //
+            //碎片随机移动
+
+            //ajax获取对应的坐标
+
+            var ajax_url="http://tback.localhost:8080/xy?k=xxxv&v=xxx&s=2";
+            jQuery.support.cors = true;
+            var target;
+
+            $.get(ajax_url, function(result){
+
+                target=result;
+            });
 
             $("#but-u").draggable(
                     {
@@ -154,15 +175,17 @@
 
 //                        $("#drag").addClass('but-drag');
                         showC();
-                        console.log('left:'+ui.position.left+'  top:'+ui.position.top);
+                        //console.log('left:'+ui.position.left+'  top:'+ui.position.top);
 
                     }, stop: function (event, ui) {
 
-//                        $("#drag").removeClass('but-drag')
 
-                        showC()
-                        if (ui.position.left > 150) {
-                            showB()
+
+
+                        //停止之后,进行检测
+                        if( Math.abs( ui.position.left - target.x )  < 10 && Math.abs( ui.position.top - target.y )  < 10  ){
+                            alert("验证完成咯~");
+                            showB();
                         }
                     }
 
