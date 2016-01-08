@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>demo</title>
+    <title>Captchca Demo</title>
     <script type="text/javascript" src="assets/jquery-2.1.4.min.js"></script>
     <script src="assets/jquery-ui.js"></script>
     <script type="text/javascript" src="assets/func.js"></script>
@@ -19,7 +19,6 @@
             width: 260px;
             background-color: antiquewhite;
         }
-
         .but{
             height: 30px;
             width: 40px;
@@ -27,15 +26,12 @@
             cursor:pointer;
             border:1px solid #000
         }
-
         .but-drag{
             background-color: beige;
         }
 
-
         .hidden{
             display: none;
-
         }
 
         .pic-k{
@@ -48,38 +44,77 @@
         }
 
 
-
-
-
-
         .div-a{ position:absolute;  z-index: 10}
-        /* css注释说明： 背景为红色 */
+
         .div-b{ position:absolute;   z-index: 20}
-        /* 背景为黄色 */
+
         .div-c{ position:relative;   z-index: 30}
-        /* DIV背景颜色为蓝色 */
 
 
+        /*美化界面*/
+
+
+
+        .container{
+            width: 960px;
+            margin: 0 auto;
+        }
+        .content{
+            width: 960px;
+            margin: 10 auto;
+            border-top: 1px solid #ccc;
+
+        }
+        .box{
+            width:300px;
+            margin: 30px auto;
+        }
+        .header{
+            margin: 80px auto 30px auto;
+            text-align: center;
+            font-size: 34px;
+        }
+        input{
+            width: 200px;
+            padding: 6px 9px;
+        }
+        #submit-but{
+            cursor: pointer;
+            line-height: 35px;
+            width: 110px;
+            margin:30px 0 0 90px;
+            border: 1px solid #FFFFF0;
+            background-color: #31C552;
+
+            border-radius: 4px;
+            font-size: 14px;
+            color: #FFFFF0;
+        }
 
     </style>
 </head>
-<body>
+<body >
+<div class="container">
+<div class="header">
+<h1>Captchca Demo</h1>
+</div>
+<div class="content">
+<form action="form.php" method="post">
 
-<h1>captchca demo</h1>
+    <div class="box">
+    <label for="email"  >邮箱:</label><input type="email" name="email" id="email" value="test@coderfix.cn"><br/>
+</div><div class="box">
+    <label for="password">密码:</label><input type="password" name="password" id="password" value="123456"><br/>
+</div>
 
-<form action="#" method="post">
-
-
-    <label for="email"  >email</label><input type="email" name="email" id="email"><br/>
-
-    <label for="password"  >password</label><input type="password" name="password" id="password"><br/>
-
-
+    <div class="box">
 
     <div class="captchca_box ">
 
         <div class="box_1" >
-            <!--放置一个图片-->
+            <!--放置隐藏的文本域-->
+            <input type="hidden" name="tc_base">
+            <input type="hidden" name="tc_postion">
             <div id="div-a" class="div-a pic-k">图片载入中</div>
             <div id="div-b" class="div-b pic-k"> </div>
             <div id="div-c" class="div-c pic-k">
@@ -93,13 +128,16 @@
             <em id="wtext">拖拽图片进行验证</em> <button onclick="init()" type="button">重新载入图片</button>
         </div>
 
-    </div><br/>
+    </div>
 
-    <button type="submit" value="submit" >Commit</button>
+        </div>
+    <div class="box">
+
+    <button id="submit-but" type="submit" value="submit" >Commit</button></div>
 
 </form>
-
-
+</div>
+</div>
 
 <script>
 
@@ -111,18 +149,9 @@
             showA();
             //图片展示区域为240 180
             //240/6= 40  180/6=30
-
             //获取当前的key v
             var massage;
             var ajax_url="http://tback.localhost:8080/picture?k=xxxv&v=xxx";
-            //请求对应的结果
-//            $.get(ajax_url, function(result){
-//
-//                console.log(result);
-//
-//                massage=result;
-//                alert(massage.a);
-//            });
 
             //没有加载的时候需要展示的图片
             //js流程,加载完成之后,进行数据的展示
@@ -253,5 +282,6 @@
     }
     loading()
 </script>
+
 </body>
 </html>
