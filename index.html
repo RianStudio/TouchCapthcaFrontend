@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>demo</title>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="assets/jquery-2.1.4.min.js"></script>
+    <script src="assets/jquery-ui.js"></script>
     <script type="text/javascript" src="assets/func.js"></script>
     <style type="text/css">
         .box_1{
@@ -17,16 +17,12 @@
         .box_2{
             height: 30px;
             width: 260px;
-            background-color: aquamarine;
+            background-color: antiquewhite;
         }
 
         .but{
             height: 30px;
             width: 40px;
-
-            /*margin-top: 5px;*/
-            /*background-color: black;*/
-            /*background-color: aquamarine;*/
             position: absolute;
             cursor:pointer;
             border:1px solid #000
@@ -49,7 +45,6 @@
             left: 10px;
             top: 10px;
             overflow: hidden;
-
         }
 
 
@@ -95,8 +90,7 @@
 
         </div>
         <div class="box_2">
-            拖拽拼图到指定位置以验证 <button onclick="init()" type="button">重新载入图片</button>
-
+            <em id="wtext">拖拽图片进行验证</em> <button onclick="init()" type="button">重新载入图片</button>
         </div>
 
     </div><br/>
@@ -109,18 +103,16 @@
 
 <script>
 
-    function  init(){
-        $(function () {
-            showC()
 
+    init();
+
+    function  init(){
+//        $(function () {
+            showA();
             //图片展示区域为240 180
             //240/6= 40  180/6=30
 
             //获取当前的key v
-
-
-
-
             var massage;
             var ajax_url="http://tback.localhost:8080/picture?k=xxxv&v=xxx";
             //请求对应的结果
@@ -132,90 +124,108 @@
 //                alert(massage.a);
 //            });
 
+            //没有加载的时候需要展示的图片
+            //js流程,加载完成之后,进行数据的展示
+            massage=new Object();
+            massage.a="";
+            massage.r="";
+            massage.w="";
+            massage.x=0;
+            massage.u=0;
             $.ajax({
                 type: "GET",
                 url: ajax_url,
-                async:false,
+//                async:false,
                 data: {k:"xxx", v:"jjj"},
                 dataType: "json",
                 success: function(data){
+                    showC();
                     massage=data;
+
+                    initDraggable(massage);
+
+                },
+                error : function() {
+                    console.log("加载失败啦~");
+                },
+                beforeSend:function(){
+                    showA();
                 }
             });
 
 
 
-            //初始化图片
-            var pic=massage.a;
-            var bg_pic=massage.r;
-            var icon=massage.w;
-            //初始化裁剪位置
-            var width_l=240; //最大宽度
-            var height_l=180; //最大高度
-            var but_width_p=Math.ceil( Math.random() * width_l) ; //随机出现在的位置,按钮的横坐标左上
-            var but_height_p=Math.ceil( Math.random() * height_l); //随机出现在的位置,按钮的纵坐标,左上
-            var clip_right=width_l-but_width_p; //裁切的右边距
-            var clip_down=height_l-but_height_p; //裁切的下边距
+            function initDraggable(massage){
+                showInput()
 
-            console.log("上 "+but_height_p+" 右 "+clip_right+" 下 "+ clip_down +" 左"+ but_width_p);
-            //确认的剪裁区域大小,上右下左
-            var rect_str="rect("+but_height_p+"px, "+clip_right+"px, "+clip_down+"px, "+ but_width_p+ "px)";
-
-//            console.log(rect_str);
-            //进行按钮的裁剪
-            $("#drag_img").attr("src",icon);
-            $("#div-c").css('background',"url('"+pic+"')");
-            $("#div-b").css('background',"url('"+bg_pic+"')");
+                //初始化图片
+                var pic=massage.a;
+                var bg_pic=massage.r;
+                var icon=massage.w;
 
 
-            //初始化碎片所在位置
+                //进行按钮的裁剪
+                $("#drag_img").attr("src",icon);
+                $("#div-c").css('background',"url('"+pic+"')");
+                $("#div-b").css('background',"url('"+bg_pic+"')");
 
-            $('#but-u').css('top',0);
-            $('#but-u').css('left',0);
 
-            //碎片随机移动
+                //初始化碎片所在位置
 
-            //ajax获取对应的坐标
+                $('#but-u').css('top',0);
+                $('#but-u').css('left',0);
+
+                //碎片随机移动
+
+                //ajax获取对应的坐标
 
 
 
-            $("#but-u").draggable(
-                    {
-                        containment: "parent",
+                $("#but-u").draggable(
+                        {
+                            containment: "parent",
+                            create: function (event, ui) {
 
-                        create: function (event, ui) {
 
-                            showC()
-
-                        }, drag: function (event, ui) {
-                        // Keep the left edge of the element
-                        // at least 100 pixels from the container
-                        ui.position.left = Math.min(250, ui.position.left);
+                            }, drag: function (event, ui) {
+                            // Keep the left edge of the element
+                            // at least 100 pixels from the container
+                            ui.position.left = Math.min(250, ui.position.left);
 
 //                        $("#drag").addClass('but-drag');
-                        showC();
-                        //console.log('left:'+ui.position.left+'  top:'+ui.position.top);
+                            showC();
+                            //console.log('left:'+ui.position.left+'  top:'+ui.position.top);
 
-                    }, stop: function (event, ui) {
+                        }, stop: function (event, ui) {
 
-
-
-
-                        //停止之后,进行检测
-                        if( Math.abs( ui.position.left - massage.x )  < 10 && Math.abs( ui.position.top - massage.y )  < 10  ){
-                            alert("验证完成咯~");
-                            showB();
+                            //停止之后,进行检测
+                            if( Math.abs( ui.position.left - massage.x )  < 10 && Math.abs( ui.position.top - massage.y )  < 10  ){
+                                showCom();
+                                showB();
+                            }
                         }
-                    }
 
-                    }
-            );
+                        }
+                );
+            }
 
 
-        });
+
+
+
+
+//        });
     }
 
-    init()
+
+    function showInput(){
+        $("#wtext").html("等待验证~");
+    }
+
+    function showCom(){
+        $("#wtext").html("验证完成~");
+
+    }
 
     function showA(){
 //        $( "#div-a" ).addClass('hidden');
