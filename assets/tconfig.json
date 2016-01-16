@@ -1,0 +1,12 @@
+{
+  "conf": {
+    "sk": "b5d496acc8da3c8f7e",
+    "ss": "314b54c8b21f77da30"
+  },
+  "server":{
+    "getUrl":"http://tback.localhost:8080/picture",
+    "checkUrl":""
+
+  }
+
+}

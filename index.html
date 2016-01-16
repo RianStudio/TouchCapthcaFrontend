@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Captchca Demo</title>
-    <script type="text/javascript" src="assets/jquery-2.1.4.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="assets/jquery.cookie.js"></script>
+    <script type="text/javascript" src="assets/jquery.base64.js"></script>
     <script src="assets/jquery-ui.js"></script>
     <script type="text/javascript" src="assets/func.js"></script>
     <style type="text/css">
@@ -19,12 +21,12 @@
             width: 260px;
             background-color: antiquewhite;
         }
-        .but{
+        .but {
             height: 30px;
             width: 40px;
             position: absolute;
-            cursor:pointer;
-            border:1px solid #000
+            cursor: pointer;
+            border: 1px solid orangered;
         }
         .but-drag{
             background-color: beige;
@@ -85,7 +87,6 @@
             margin:30px 0 0 90px;
             border: 1px solid #FFFFF0;
             background-color: #31C552;
-
             border-radius: 4px;
             font-size: 14px;
             color: #FFFFF0;
@@ -96,7 +97,7 @@
 <body >
 <div class="container">
 <div class="header">
-<h1>Captchca Demo</h1>
+<h1></h1>
 </div>
 <div class="content">
 <form action="form.php" method="post">
@@ -113,13 +114,12 @@
 
         <div class="box_1" >
             <!--放置隐藏的文本域-->
-            <input type="hidden" name="tc_base">
-            <input type="hidden" name="tc_postion">
+            <input type="hidden" name="tc_base" id="tc_base">
+            <input type="hidden" name="tc_postion" id="tc_postion">
             <div id="div-a" class="div-a pic-k">图片载入中</div>
             <div id="div-b" class="div-b pic-k"> </div>
             <div id="div-c" class="div-c pic-k">
                 <div class="but" id="but-u"><img src="" id="drag_img"></div>
-                <!--<img src="" id="" class="but" >-->
             </div>
 
 
@@ -146,31 +146,48 @@
 
     function  init(){
 //        $(function () {
+
             showA();
             //图片展示区域为240 180
             //240/6= 40  180/6=30
-            //获取当前的key v
+            //获取当前的key
+
+        //读取配置文件
+        tc_app_key="";
+        tc_app_secret="";
+        ajax_url="";
+        $.ajaxSettings.async = false;
+        $.getJSON("assets/tconfig.json",function(data){
+//            console.log(data.conf.sk);
+            tc_app_key=data.conf.sk;
+             tc_app_secret=data.conf.ss;
+             ajax_url=data.server.getUrl;
+        });
+
+        console.log(tc_app_key);
+
+        $.ajaxSettings.async = true;
             var massage;
-            var ajax_url="http://tback.localhost:8080/picture?k=xxxv&v=xxx";
+
 
             //没有加载的时候需要展示的图片
             //js流程,加载完成之后,进行数据的展示
             massage=new Object();
-            massage.a="";
-            massage.r="";
-            massage.w="";
-            massage.x=0;
-            massage.u=0;
+//            massage.a="";
+//            massage.r="";
+//            massage.w="";
+//            massage.x=0;
+//            massage.u=0;
             $.ajax({
                 type: "GET",
                 url: ajax_url,
 //                async:false,
-                data: {k:"xxx", v:"jjj"},
+                data: {k:tc_app_key, s:tc_app_secret},
                 dataType: "json",
                 success: function(data){
                     showC();
                     massage=data;
-
+                    console.log(data);
                     initDraggable(massage);
 
                 },
@@ -208,6 +225,7 @@
 
                 //ajax获取对应的坐标
 
+                var fix=5;
 
 
                 $("#but-u").draggable(
@@ -228,9 +246,13 @@
                         }, stop: function (event, ui) {
 
                             //停止之后,进行检测
-                            if( Math.abs( ui.position.left - massage.x )  < 10 && Math.abs( ui.position.top - massage.y )  < 10  ){
+                            if( Math.abs( ui.position.left - massage.x )  < fix && Math.abs( ui.position.top - massage.y )  < fix  ){
+                                setHiddenValue(ui.position.left,ui.position.top,tc_app_secret);
                                 showCom();
                                 showB();
+                                //把当前的坐标传给隐藏文本域
+
+
                             }
                         }
 
@@ -240,11 +262,19 @@
 
 
 
-
-
-
 //        });
     }
+
+    function setHiddenValue(x,y,secret){
+        //获取对应的key
+        //简单的加密
+        $.base64.utf8encode = true;
+        var postion_str= $.base64.btoa($.base64.btoa(x.toString()) + $.base64.btoa(y.toString()));
+        var s= $.base64.btoa(secret);
+        $("#tc_base").val(s);
+        $("#tc_postion").val(postion_str);
+    }
+
 
 
     function showInput(){
