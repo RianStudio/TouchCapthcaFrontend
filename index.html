@@ -74,7 +74,7 @@
         .header{
             margin: 80px auto 30px auto;
             text-align: center;
-            font-size: 34px;
+            font-size: 28px;
         }
         input{
             width: 200px;
@@ -97,7 +97,7 @@
 <body >
 <div class="container">
 <div class="header">
-<h1></h1>
+<h1>captchca</h1>
 </div>
 <div class="content">
 <form action="form.php" method="post">
@@ -110,7 +110,7 @@
 
     <div class="box">
 
-    <div class="captchca_box ">
+    <div class="captchca_box " id="captchca_box">
 
         <div class="box_1" >
             <!--放置隐藏的文本域-->
@@ -124,7 +124,7 @@
 
 
         </div>
-        <div class="box_2">
+        <div class="box_2" id="box_2">
             <em id="wtext">拖拽图片进行验证</em> <button onclick="init()" type="button">重新载入图片</button>
         </div>
 
@@ -145,21 +145,20 @@
     init();
 
     function  init(){
-//        $(function () {
-
             showA();
+          showD();
             //图片展示区域为240 180
             //240/6= 40  180/6=30
             //获取当前的key
 
         //读取配置文件
-        tc_app_key="";
-        tc_app_secret="";
-        ajax_url="";
+//        tc_app_key=""; //初始化数据
+//        tc_app_secret="";
+//        ajax_url="";
         $.ajaxSettings.async = false;
         $.getJSON("assets/tconfig.json",function(data){
 //            console.log(data.conf.sk);
-            tc_app_key=data.conf.sk;
+             tc_app_key=data.conf.sk;
              tc_app_secret=data.conf.ss;
              ajax_url=data.server.getUrl;
         });
@@ -173,11 +172,6 @@
             //没有加载的时候需要展示的图片
             //js流程,加载完成之后,进行数据的展示
             massage=new Object();
-//            massage.a="";
-//            massage.r="";
-//            massage.w="";
-//            massage.x=0;
-//            massage.u=0;
             $.ajax({
                 type: "GET",
                 url: ajax_url,
@@ -185,10 +179,21 @@
                 data: {k:tc_app_key, s:tc_app_secret},
                 dataType: "json",
                 success: function(data){
-                    showC();
-                    massage=data;
-                    console.log(data);
-                    initDraggable(massage);
+                    //对返回结果进行判断
+                    if(data.type == 0){
+                        showA();
+                        hiddenD();
+                        //文字改成验证失败
+                        $("#div-a").html("请检查APP密钥,通讯失败!");
+
+
+                    }else{
+                        showC();
+                        massage=data;
+                        console.log(data);
+                        initDraggable(massage);
+                    }
+
 
                 },
                 error : function() {
@@ -284,6 +289,14 @@
     function showCom(){
         $("#wtext").html("验证完成~");
 
+    }
+
+    function showD(){
+        $("#box_2").removeClass('hidden');
+    }
+
+    function hiddenD(){
+        $("#box_2").addClass('hidden');
     }
 
     function showA(){
