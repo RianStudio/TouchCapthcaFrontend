@@ -112,21 +112,21 @@
 
     <div class="captchca_box " id="captchca_box">
 
-        <div class="box_1" >
-            <!--放置隐藏的文本域-->
-            <input type="hidden" name="tc_base" id="tc_base">
-            <input type="hidden" name="tc_postion" id="tc_postion">
-            <div id="div-a" class="div-a pic-k">图片载入中</div>
-            <div id="div-b" class="div-b pic-k"> </div>
-            <div id="div-c" class="div-c pic-k">
-                <div class="but" id="but-u"><img src="" id="drag_img"></div>
-            </div>
+        <!--<div class="box_1" id="box_1" >-->
+            <!--&lt;!&ndash;放置隐藏的文本域&ndash;&gt;-->
+            <!--<input type="hidden" name="tc_key" id="tc_key">-->
+            <!--<input type="hidden" name="tc_base" id="tc_base">-->
+            <!--<input type="hidden" name="tc_postion" id="tc_postion">-->
+            <!--<div id="div-a" class="div-a pic-k">图片载入中</div>-->
+            <!--<div id="div-b" class="div-b pic-k"> </div>-->
+            <!--<div id="div-c" class="div-c pic-k">-->
+                <!--<div class="but" id="but-u"><img src="" id="drag_img"></div>-->
+            <!--</div>-->
 
-
-        </div>
-        <div class="box_2" id="box_2">
-            <em id="wtext">拖拽图片进行验证</em> <button onclick="init()" type="button">重新载入图片</button>
-        </div>
+        <!--</div>-->
+        <!--<div class="box_2" id="box_2">-->
+            <!--<em id="wtext">拖拽图片进行验证</em> <button onclick="init()" type="button">重新载入图片</button>-->
+        <!--</div>-->
 
     </div>
 
@@ -141,11 +141,11 @@
 
 <script>
 
-
+    createHtml();
     init();
 
     function  init(){
-            showA();
+        showA();
           showD();
             //图片展示区域为240 180
             //240/6= 40  180/6=30
@@ -252,7 +252,7 @@
 
                             //停止之后,进行检测
                             if( Math.abs( ui.position.left - massage.x )  < fix && Math.abs( ui.position.top - massage.y )  < fix  ){
-                                setHiddenValue(ui.position.left,ui.position.top,tc_app_secret);
+                                setHiddenValue(ui.position.left,ui.position.top,tc_app_key,tc_app_secret);
                                 showCom();
                                 showB();
                                 //把当前的坐标传给隐藏文本域
@@ -270,13 +270,41 @@
 //        });
     }
 
-    function setHiddenValue(x,y,secret){
+    function createHtml(){
+        var box_1=$("<div></div>").attr({"id":"box_1","class":"box_1"});
+        var box_2=$("<div></div>").attr({"id":"box_2","class":"box_2"});
+
+        var input_1 = $("<input />").attr({"type":"hidden","name":"tc_key","id":"tc_key"});
+        var input_2 = $("<input />").attr({"type":"hidden","name":"tc_base","id":"tc_base"});
+        var input_3 = $("<input />").attr({"type":"hidden","name":"tc_postion","id":"tc_postion"});
+
+        var div_a=$("<div></div>").attr({"id":"div-a","class":" div-a pic-k "});
+        var div_b=$("<div></div>").attr({"id":"div-b","class":" div-b pic-k "});
+        var div_c=$("<div></div>").attr({"id":"div-c","class":" div-c pic-k "});
+
+        var img_drag=$("<div></div>").attr({"id":"but-u","class":" but "});
+        var img_img=$("<img />").attr({"src":"xxx","id":"drag_img"});
+
+        var em = $("<em><em/>").attr({"id": "wtext"}).html("拖拽图片进行验证");
+        var but=$("<button>").attr("type","button").html("重新载入图片").click(function(){init()});
+
+        box_2.append(em,but);
+        img_drag.append(img_img);
+        div_c.append(img_drag);
+        box_1.append(input_1,input_2,input_3,div_a,div_b,div_c);
+
+        $("#captchca_box").append(box_1,box_2);
+    }
+
+    function setHiddenValue(x,y,key,secret){
         //获取对应的key
         //简单的加密
         $.base64.utf8encode = true;
         var postion_str= $.base64.btoa($.base64.btoa(x.toString()) + $.base64.btoa(y.toString()));
         var s= $.base64.btoa(secret);
+        var tc_key= $.base64.btoa(key);
         $("#tc_base").val(s);
+        $("#tc_key").val(tc_key);
         $("#tc_postion").val(postion_str);
     }
 

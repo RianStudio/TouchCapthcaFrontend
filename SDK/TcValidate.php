@@ -2,7 +2,6 @@
 
 namespace  SDK;
 
-
 /**
  * Created by PhpStorm.
  * User: yu
@@ -11,12 +10,13 @@ namespace  SDK;
  */
 class TcValidate
 {
-     protected $location ;
-    protected $k ;
-    protected $v ;
+    private $location ;
+    private $k ;
+    private $v ;
 
     function __construct($k,$v,$location)
     {
+
         $this->k=$k;
         $this->v=$v;
         $this->location=$location;
@@ -26,7 +26,17 @@ class TcValidate
 
     public function validate(){
         //得到数据,和后台进行检测
-        
+        //通过get方式进行检测
+        $url="http://tback.localhost:8080/v";
+//        $pr=[
+//            'k'=>$this->k,
+//            'v'=>$this->v,
+//            'location'=>$this->location,
+//        ];
+
+//        $result=$this->curl($url,$pr);
+
+        return $this;
 
     }
 
