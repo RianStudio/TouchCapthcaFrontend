@@ -100,7 +100,7 @@
 <h1>captchca</h1>
 </div>
 <div class="content">
-<form action="form.php" method="post">
+<form action="phpdemo/form.php" method="post">
 
     <div class="box">
     <label for="email"  >邮箱:</label><input type="email" name="email" id="email" value="test@coderfix.cn"><br/>
@@ -237,27 +237,21 @@
                         {
                             containment: "parent",
                             create: function (event, ui) {
-
-
+                                
                             }, drag: function (event, ui) {
                             // Keep the left edge of the element
                             // at least 100 pixels from the container
                             ui.position.left = Math.min(250, ui.position.left);
-
 //                        $("#drag").addClass('but-drag');
                             showC();
                             //console.log('left:'+ui.position.left+'  top:'+ui.position.top);
 
                         }, stop: function (event, ui) {
-
+                            setHiddenValue(ui.position.left,ui.position.top,tc_app_key,tc_app_secret);
                             //停止之后,进行检测
                             if( Math.abs( ui.position.left - massage.x )  < fix && Math.abs( ui.position.top - massage.y )  < fix  ){
-                                setHiddenValue(ui.position.left,ui.position.top,tc_app_key,tc_app_secret);
                                 showCom();
                                 showB();
-                                //把当前的坐标传给隐藏文本域
-
-
                             }
                         }
 
