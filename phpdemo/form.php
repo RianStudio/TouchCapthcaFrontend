@@ -11,12 +11,11 @@ include_once "../SDK/TcValidate.php";
  * Time: 上午10:26
  */
 
-
     $value = new TcValidate();
 
     //var_dump($value);
 
-    $result = $value->validate($_REQUEST['tc_key'], $_REQUEST['tc_base'], $_REQUEST['tc_postion']);
+    $result = $value->validate($_REQUEST['tc_key'], $_REQUEST['tc_base'],$_REQUEST['tc_cooike'], $_REQUEST['tc_postion']);
 
     var_dump($result);
 

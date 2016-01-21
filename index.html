@@ -44,19 +44,10 @@
             top: 10px;
             overflow: hidden;
         }
-
-
         .div-a{ position:absolute;  z-index: 10}
-
         .div-b{ position:absolute;   z-index: 20}
-
         .div-c{ position:relative;   z-index: 30}
-
-
         /*美化界面*/
-
-
-
         .container{
             width: 960px;
             margin: 0 auto;
@@ -111,7 +102,6 @@
     <div class="box">
 
     <div class="captchca_box " id="captchca_box">
-
         <!--<div class="box_1" id="box_1" >-->
             <!--&lt;!&ndash;放置隐藏的文本域&ndash;&gt;-->
             <!--<input type="hidden" name="tc_key" id="tc_key">-->
@@ -127,10 +117,8 @@
         <!--<div class="box_2" id="box_2">-->
             <!--<em id="wtext">拖拽图片进行验证</em> <button onclick="init()" type="button">重新载入图片</button>-->
         <!--</div>-->
-
     </div>
-
-        </div>
+    </div>
     <div class="box">
 
     <button id="submit-but" type="submit" value="submit" >Commit</button></div>
@@ -143,39 +131,24 @@
 
     createHtml();
     init();
-
     function  init(){
         showA();
-          showD();
-            //图片展示区域为240 180
-            //240/6= 40  180/6=30
-            //获取当前的key
-
+        showD();
         //读取配置文件
-//        tc_app_key=""; //初始化数据
-//        tc_app_secret="";
-//        ajax_url="";
         $.ajaxSettings.async = false;
         $.getJSON("assets/tconfig.json",function(data){
-//            console.log(data.conf.sk);
              tc_app_key=data.conf.sk;
              tc_app_secret=data.conf.ss;
              ajax_url=data.server.getUrl;
         });
-
-        console.log(tc_app_key);
-
         $.ajaxSettings.async = true;
             var massage;
-
-
             //没有加载的时候需要展示的图片
             //js流程,加载完成之后,进行数据的展示
             massage=new Object();
             $.ajax({
                 type: "GET",
                 url: ajax_url,
-//                async:false,
                 data: {k:tc_app_key, s:tc_app_secret},
                 dataType: "json",
                 success: function(data){
@@ -185,16 +158,15 @@
                         hiddenD();
                         //文字改成验证失败
                         $("#div-a").html("请检查APP密钥,通讯失败!");
-
-
                     }else{
+
                         showC();
                         massage=data;
                         console.log(data);
                         initDraggable(massage);
+                        //存入本地cookie,放到隐藏文本域
+                        $.cookie('tc_cookie', data.c);
                     }
-
-
                 },
                 error : function() {
                     console.log("加载失败啦~");
@@ -204,8 +176,6 @@
                 }
             });
 
-
-
             function initDraggable(massage){
                 showInput()
 
@@ -213,31 +183,21 @@
                 var pic=massage.a;
                 var bg_pic=massage.r;
                 var icon=massage.w;
-
-
                 //进行按钮的裁剪
                 $("#drag_img").attr("src",icon);
                 $("#div-c").css('background',"url('"+pic+"')");
                 $("#div-b").css('background',"url('"+bg_pic+"')");
-
-
                 //初始化碎片所在位置
-
                 $('#but-u').css('top',0);
                 $('#but-u').css('left',0);
-
                 //碎片随机移动
-
                 //ajax获取对应的坐标
-
-                var fix=5;
-
-
+                var fix=10;
                 $("#but-u").draggable(
                         {
                             containment: "parent",
                             create: function (event, ui) {
-                                
+
                             }, drag: function (event, ui) {
                             // Keep the left edge of the element
                             // at least 100 pixels from the container
@@ -254,7 +214,6 @@
                                 showB();
                             }
                         }
-
                         }
                 );
             }
@@ -271,6 +230,7 @@
         var input_1 = $("<input />").attr({"type":"hidden","name":"tc_key","id":"tc_key"});
         var input_2 = $("<input />").attr({"type":"hidden","name":"tc_base","id":"tc_base"});
         var input_3 = $("<input />").attr({"type":"hidden","name":"tc_postion","id":"tc_postion"});
+        var input_4 = $("<input />").attr({"type":"hidden","name":"tc_cookie","id":"tc_cookie"});
 
         var div_a=$("<div></div>").attr({"id":"div-a","class":" div-a pic-k "});
         var div_b=$("<div></div>").attr({"id":"div-b","class":" div-b pic-k "});
@@ -285,8 +245,7 @@
         box_2.append(em,but);
         img_drag.append(img_img);
         div_c.append(img_drag);
-        box_1.append(input_1,input_2,input_3,div_a,div_b,div_c);
-
+        box_1.append(input_1,input_2,input_3,input_4,div_a,div_b,div_c);
         $("#captchca_box").append(box_1,box_2);
     }
 
@@ -300,6 +259,8 @@
         $("#tc_base").val(s);
         $("#tc_key").val(tc_key);
         $("#tc_postion").val(postion_str);
+        $("#tc_cookie").val($.cookie("tc_cookie"));
+
     }
 
 
