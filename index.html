@@ -178,7 +178,6 @@
 
             function initDraggable(massage){
                 showInput()
-
                 //初始化图片
                 var pic=massage.a;
                 var bg_pic=massage.r;
@@ -207,6 +206,7 @@
                             //console.log('left:'+ui.position.left+'  top:'+ui.position.top);
 
                         }, stop: function (event, ui) {
+
                             setHiddenValue(ui.position.left,ui.position.top,tc_app_key,tc_app_secret);
                             //停止之后,进行检测
                             if( Math.abs( ui.position.left - massage.x )  < fix && Math.abs( ui.position.top - massage.y )  < fix  ){
@@ -253,13 +253,13 @@
         //获取对应的key
         //简单的加密
         $.base64.utf8encode = true;
-        var postion_str= $.base64.btoa($.base64.btoa(x.toString()) + $.base64.btoa(y.toString()));
+        var postion_str= $.base64.btoa($.base64.btoa(x.toString()) + "cute" + $.base64.btoa(y.toString()));
         var s= $.base64.btoa(secret);
         var tc_key= $.base64.btoa(key);
         $("#tc_base").val(s);
         $("#tc_key").val(tc_key);
         $("#tc_postion").val(postion_str);
-        $("#tc_cookie").val($.cookie("tc_cookie"));
+        $("#tc_cookie").val($.cookie('tc_cookie'));
 
     }
 

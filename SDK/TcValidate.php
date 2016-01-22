@@ -11,7 +11,7 @@
 class TcValidate
 {
 
-    public function validate($k,$v,$location){
+    public function validate($k,$v,$cooike,$location){
 
             //得到数据,和后台进行检测
             //通过get方式进行检测
@@ -19,7 +19,9 @@ class TcValidate
         $pr=[
             'k'=>$k,
             'v'=>$v,
+            'c'=>$cooike,
             'location'=>$location,
+
         ];
 
             $curl_result = $this->curl($url,$pr);
