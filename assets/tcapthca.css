@@ -1,0 +1,38 @@
+.box_1{
+    position:relative;
+    height: 200px;
+    width: 260px;
+    background-color: antiquewhite;
+
+}
+.box_2{
+    height: 30px;
+    width: 260px;
+    background-color: antiquewhite;
+}
+.but {
+    height: 30px;
+    width: 40px;
+    position: absolute;
+    cursor: pointer;
+    border: 1px solid orangered;
+}
+.but-drag{
+    background-color: beige;
+}
+
+.hidden{
+    display: none;
+}
+
+.pic-k{
+    width: 240px;
+    height: 180px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    overflow: hidden;
+}
+.div-a{ position:absolute;  z-index: 10}
+.div-b{ position:absolute;   z-index: 20}
+.div-c{ position:relative;   z-index: 30}
